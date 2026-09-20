@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNMS — Unified Network Monitoring System</title>
+<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/net.css">
+
+<link rel="icon" type="image/png" href="/static/image.png">
+
+</head>
+<body>
+
+<nav>
+
+  <h1 class="logo" onclick="showPage('home')">UNMS</h1>
+  <ul>
+    <li><a href="#" onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
+    <li><a href="#" onclick="showPage('network')" id="nav-network">Network</a></li>
+    <li><a href="#" onclick="showPage('log')" id="nav-log">Logs</a></li>
+    <li><a href="#" onclick="showPage('about')" id="nav-about">About</a></li>
+    <li><a href="#" onclick="showPage('contact')" id="nav-contact">Contact</a></li>
+    <li><a href="#" onclick="showPage('help')" id="nav-help">Help</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════ HOME ═══════════ -->
+<section id="home" class="page active">
+  <div class="hero-eyebrow">
+    <span class="hero-dot"></span>
+    System Online
+  </div>
+  <h1 class="hero-title">
+    Unified Network Observability<br>
+    <span>&amp; Security Tool</span>
+  </h1>
+  <p class="hero-desc">
+    Monitor live traffic, manage connected hardware, and receive instant alerts on network health.
+    A centralized dashboard for complete network visibility and security.
+  </p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="showPage('network')">Open Dashboard</button>
+    <button class="btn-ghost" onclick="showPage('about')">Learn More</button>
+  </div>
+  <div class="hero-badges">
+    <span class="badge">🔍 Network Discovery</span>
+    <span class="badge">📊 Traffic Analysis</span>
+    <span class="badge">🛡️ Security Auditing</span>
+    <span class="badge">📈 Real-time Reports</span>
+  </div>
+</section>
+
+<!-- ═══════════ NETWORK ═══════════ -->
+ 
+<section id="network" class="page">
+  <div class="summary">
+    <div class="card"><p>Scan Status</p><span id="net-scan-status">Idle</span></div>
+    <div class="card2"><p>Connected Devices</p><span id="net-device-count">6 devices</span></div>
+    <div class="card3"><p>Traffic Usage</p><span id="net-traffic-usage">—</span></div>
+  </div>
+  <div class="actions">
+    <button id="net-scan-btn" onclick="startNetworkScan()">⟳ &nbsp;Scan Network</button>
+     
+  </div>
+  <div class="devices">
+    <div class="devices-header">
+      <h2>Discovered Devices</h2>
+      <span class="row-count" id="net-count-label">6 devices</span>
+    </div>
+    <table>
+      <thead><tr><th>Device Name</th><th>IP Address</th><th>MAC Address</th><th>Status</th><th>Vendor</th><th>Risk</th></tr></thead>
+      <tbody id="net-device-table"></tbody>
+    </table>
+  </div>
+  <p style="color:var(--muted);font-size:0.85rem;padding:0 0.25rem;">Click any row above to open its Device Details page.</p>
+</section>
+ 
+<!-- DEVICE DETAILS PAGE -->
+<section id="device-details-page" class="page">
+  <div class="actions">
+    <button onclick="showPage('network')">← &nbsp;Back to Network</button>
+    <button id="dd-refresh-btn" onclick="renderDeviceDetails(currentDeviceId)">⟳ &nbsp;Refresh</button>
+    <button id="dd-scan-btn" onclick="scanPorts()">🔍 &nbsp;Scan Ports</button>
+    <button onclick="scrollToHistory()">📜 &nbsp;View History</button>
+  </div>
+ 
+  <div class="dd-summary">
+    <div class="dd-summary-top">
+      <span id="dd-status-dot" class="dd-dot"></span>
+      <h2 id="dd-hostname">—</h2>
+      <span id="dd-risk-badge" class="risk-badge">—</span>
+    </div>
+    <div class="dd-summary-grid">
+      <div><p>IP Address</p><span id="dd-ip">—</span></div>
+      <div><p>MAC Address</p><span id="dd-mac">—</span></div>
+      <div><p>Vendor</p><span id="dd-vendor">—</span></div>
+    </div>
+  </div>
+ 
+  <div class="dd-quickstats">
+    <div class="dd-quickstat"><p>Status</p><span id="qs-status">—</span></div>
+    <div class="dd-quickstat"><p>First Seen</p><span id="qs-first-seen">—</span></div>
+    <div class="dd-quickstat"><p>Last Seen</p><span id="qs-last-seen">—</span></div>
+    <div class="dd-quickstat"><p>Open Ports</p><span id="qs-open-ports">—</span></div>
+    <div class="dd-quickstat"><p>Alerts</p><span id="qs-alerts">—</span></div>
+    <div class="dd-quickstat"><p>Risk</p><span id="qs-risk">—</span></div>
+  </div>
+ 
+
+ 
+  <div class="devices">
+    <div class="devices-header"><h2>Device Story</h2></div>
+    <ul id="dd-story" class="dd-story-list"></ul>
+  </div>
+ 
+  <div class="devices">
+    <div class="devices-header"><h2>Investigation Timeline</h2></div>
+    <div id="dd-timeline" class="dd-timeline"></div>
+  </div>
+ 
+  <div class="devices">
+    <div class="devices-header"><h2>Open Ports</h2></div>
+    <div id="dd-ports-msg" class="dd-state-msg">Ports have not been scanned yet.</div>
+    <table id="dd-ports-table" style="display:none;">
+      <thead><tr><th>Port</th><th>Protocol</th><th>State</th><th>Service</th></tr></thead>
+      <tbody id="dd-ports-body"></tbody>
+    </table>
+  </div>
+ 
+  
+ 
+  <div class="devices" id="device-history-section">
+
+    <div class="devices-header">
+        <h2>Device History</h2>
+        <span class="row-count" id="dd-history-count">0 events</span>
+    </div>
+
+    <table id="dd-history-table">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Event</th>
+                <th>IP</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody id="dd-history-body"></tbody>
+    </table>
+
+</div>
+ 
+</section>
+<script src="/static/net.js"></script>
+ 
+
+ 
+
+<!-- ═══════════ LOG ═══════════ -->
+<section id="log" class="page">
+  <h2>Log History</h2>
+  <div class="log-filters">
+    <input type="text" id="log-search" placeholder="🔍  Search devices…" oninput="filterLog()" style="width:220px;">
+    <input type="date" id="log-date" oninput="filterLog()" style="width:160px;color-scheme:dark;">
+  </div>
+  <div class="devices">
+    <div class="devices-header">
+      <h2>Event Log</h2>
+      <span class="row-count" id="log-count">2 entries</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Device Name</th>
+          <th>IP Address</th>
+          <th>MAC Address</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody id="logtable">
+        <tr>
+          <td>Laptop</td>
+          <td>192.168.58.1</td>
+          <td>aa:bb:cc:dd</td>
+          <td><span class="status-badge active">Active</span></td>
+          <td>2025-06-01</td>
+          <td>09:14:22</td>
+        </tr>
+        <tr>
+          <td>Mobile</td>
+          <td>192.168.58.2</td>
+          <td>ee:ff:gg:hh</td>
+          <td><span class="status-badge active">Active</span></td>
+          <td>2025-06-01</td>
+          <td>09:15:05</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════ ABOUT ═══════════ -->
+<section id="about" class="page">
+  <h1>1. Introduction</h1>
+  <p>The Unified Network Monitoring System (UNMS) is a specialized platform developed to bridge the gap between
+    network administration and digital forensics. It provides a centralized interface for observing, analyzing,
+    and securing network infrastructures.</p>
+  <h1>2. Key Features</h1>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="icon">🔍</div>
+      <h3>Network Discovery</h3>
+      <p>Automatically scans the local environment to identify active hosts, MAC addresses, and device types.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">📊</div>
+      <h3>Traffic Analysis</h3>
+      <p>Monitors bandwidth usage and data packets to identify bottlenecks and optimize network performance.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🛡️</div>
+      <h3>Security Auditing</h3>
+      <p>Logs connection attempts and detects anomalies indicating unauthorized access or security threats.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">📈</div>
+      <h3>Real-time Reporting</h3>
+      <p>Generates visual summaries of system uptime and latency for quick decision-making.</p>
+    </div>
+  </div>
+  <h1>3. The Forensic Connection</h1>
+  <p>As a student of Digital &amp; Cyber Forensic Science, I developed this tool to focus on Network Observability.
+    By capturing live data flow, this system provides the baseline evidence needed for forensic investigation
+    and incident response.</p>
+</section>
+
+<!-- ═══════════ HELP ═══════════ -->
+<section id="help" class="page">
+  <div class="help-hero">
+    <h1>Help &amp; Documentation</h1>
+    <p>Everything you need to get started with UNMS — guides, FAQs, and quick references.</p>
+  </div>
+  <div class="help-search">
+    <input type="text" id="help-search-input" placeholder="Search help topics…" oninput="searchHelp(this.value)">
+    <button>🔍</button>
+  </div>
+  <div class="help-grid">
+    <div class="help-card" onclick="scrollToHelp('getting-started')">
+      <div class="hc-icon">🚀</div>
+      <h3>Getting Started</h3>
+      <p>Learn how to set up UNMS, run your first scan, and navigate the dashboard.</p>
+    </div>
+    <div class="help-card" onclick="scrollToHelp('faq')">
+      <div class="hc-icon">❓</div>
+      <h3>FAQs</h3>
+      <p>Answers to the most common questions about network scanning, logs, and alerts.</p>
+    </div>
+    <div class="help-card" onclick="scrollToHelp('shortcuts')">
+      <div class="hc-icon">⌨️</div>
+      <h3>Quick Reference</h3>
+      <p>Status indicators, terminology, and navigation shortcuts explained at a glance.</p>
+    </div>
+    <div class="help-card" onclick="scrollToHelp('troubleshoot')">
+      <div class="hc-icon">🔧</div>
+      <h3>Troubleshooting</h3>
+      <p>Fix common issues like failed scans, missing devices, or incorrect traffic readings.</p>
+    </div>
+  </div>
+
+  <div id="getting-started">
+    <p class="help-section-title">🚀 Getting Started</p>
+    <div class="steps-list">
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Open the Network Dashboard</h4>
+          <p>Click <strong style="color:#c4a8db">Network</strong> in the top navigation bar to access the main monitoring panel. You will see three status cards: Scan Status, Connected Devices, and Traffic Usage.</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Run a Network Scan</h4>
+          <p>Press the <strong style="color:#c4a8db">⟳ Scan Network</strong> button. UNMS will sweep the local subnet, detect active hosts, and update the device table with IP addresses and MAC addresses automatically.</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Review Connected Devices</h4>
+          <p>The device table lists every discovered host. Each row shows the device name, IP address, MAC address, and current status. Hover over a row to highlight it. Rows update in real time after each scan.</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Check the Event Log</h4>
+          <p>Navigate to <strong style="color:#c4a8db">Logs</strong> to view a timestamped history of all scanned devices. Use the search box to filter by device name and the date picker to narrow down by date.</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>Understand the Status Cards</h4>
+          <p><strong style="color:#c4a8db">Scan Status</strong> shows whether a scan is running or complete. <strong style="color:#c4a8db">Connected Devices</strong> displays the live host count. <strong style="color:#c4a8db">Traffic Usage</strong> estimates the bandwidth consumed during the last scan cycle.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="faq">
+    <p class="help-section-title">❓ Frequently Asked Questions</p>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What does the Scan Network button actually do?<span class="faq-chevron">▼</span></div>
+        <div class="faq-a">The scan button triggers an ARP sweep of the local subnet. It sends broadcast packets and listens for replies from active hosts, then populates the device table with each responding IP and its corresponding MAC address. The traffic card updates with an estimated bandwidth reading after the sweep completes.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Why does a device show "Offline" in the status column?<span class="faq-chevron">▼</span></div>
+        <div class="faq-a">A device is marked Offline when it did not respond to the most recent scan. This can happen if the device is powered off, has gone to sleep, is blocking ICMP/ARP probes via a firewall, or has changed its IP due to a DHCP reassignment. Re-run the scan after ensuring the device is active.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How is Traffic Usage calculated?<span class="faq-chevron">▼</span></div>
+        <div class="faq-a">Traffic Usage reflects the total bytes transmitted and received by the monitoring interface during the last scan window. It is a snapshot, not a cumulative counter — it resets with each new scan. For continuous traffic monitoring, a dedicated packet-capture tool such as Wireshark or ntopng is recommended alongside UNMS.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can UNMS detect devices on other subnets?<span class="faq-chevron">▼</span></div>
+        <div class="faq-a">By default, UNMS only scans the local subnet of the host machine. Devices on different subnets require either routing configuration or multiple UNMS instances deployed per subnet. Cross-subnet ICMP ping sweeps can be enabled in the backend config if the network gateway permits forwarded ICMP.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How do I search and filter the event log?<span class="faq-chevron">▼</span></div>
+        <div class="faq-a">Go to the Logs page. Type any keyword — device name, IP address, or MAC address — in the search box to instantly filter matching rows. Use the date picker to restrict results to a specific day. Both filters work together, so you can search for "Laptop" on "2025-06-01" simultaneously.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is UNMS suitable for forensic evidence collection?<span class="faq-chevron">▼</span></div>
+        <div class="faq-a">UNMS is designed as an observability and baseline tool for Digital &amp; Cyber Forensic Science students. The log history provides timestamped connection records that can support incident timelines. For court-admissible forensic capture, logs should be exported, hashed, and stored using a write-once evidence management process.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What does the MAC address column tell me?<span class="faq-chevron">▼</span></div>
+        <div class="faq-a">The MAC (Media Access Control) address is a hardware identifier unique to each network interface. The first three octets (OUI) identify the device manufacturer — for example, a MAC starting with "B8:27:EB" indicates a Raspberry Pi. This is useful in forensic analysis for identifying unknown or rogue devices on the network.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="shortcuts">
+    <p class="help-section-title">⌨️ Quick Reference</p>
+    <table class="shortcut-table">
+      <thead>
+        <tr><th>Term / Action</th><th>Meaning</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><kbd>Scan Network</kbd></td><td>Runs an ARP sweep of the local subnet and refreshes the device table</td></tr>
+        <tr><td><kbd>View Logs</kbd></td><td>Opens the timestamped event log with search and date filters</td></tr>
+        <tr><td><span class="status-badge active" style="font-size:0.75rem;">Active</span></td><td>Device responded to the last scan and is currently reachable</td></tr>
+        <tr><td><span class="status-badge offline" style="font-size:0.75rem;">Offline</span></td><td>Device did not respond — powered off, asleep, or blocking probes</td></tr>
+        <tr><td>IP Address</td><td>Logical address assigned to the device on the network (e.g. 192.168.1.10)</td></tr>
+        <tr><td>MAC Address</td><td>Hardware address burned into the network card — used to identify the manufacturer</td></tr>
+        <tr><td>Traffic Usage</td><td>Estimated bytes transferred during the last scan window</td></tr>
+        <tr><td>OUI</td><td>Organizationally Unique Identifier — the first 3 octets of a MAC that identify the vendor</td></tr>
+        <tr><td>ARP Sweep</td><td>A technique that sends broadcast packets to discover all active hosts on a subnet</td></tr>
+        <tr><td>Incident Response</td><td>The process of detecting, containing, and analysing a network security event</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="troubleshoot">
+    <p class="help-section-title">🔧 Troubleshooting</p>
+    <div class="steps-list">
+      <div class="step-row">
+        <div class="step-num">!</div>
+        <div class="step-body">
+          <h4>Scan completes but no devices appear</h4>
+          <p>Ensure the backend server is running and the scanning module has permission to send ARP packets (may require root/administrator privileges). Also confirm the host machine is connected to the network via the correct interface.</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">!</div>
+        <div class="step-body">
+          <h4>A known device is missing from the table</h4>
+          <p>The device may be on a different subnet, using a VPN, or blocking broadcast packets. Try pinging the device manually to confirm reachability, then re-run the scan. Check that the DHCP lease for the device has not expired and reassigned to a new IP.</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">!</div>
+        <div class="step-body">
+          <h4>Traffic Usage always shows "—"</h4>
+          <p>Traffic data requires the backend monitoring agent to be actively capturing on the network interface. If the agent is not running or the interface name is misconfigured in the settings, the card will show no data. Verify the interface name matches your operating system (e.g. eth0, en0, wlan0).</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">!</div>
+        <div class="step-body">
+          <h4>Log filter returns no results</h4>
+          <p>Check that the date format in the date picker matches the format stored in the log (YYYY-MM-DD). Clear both the search box and date picker and try again. If the log table is empty, run a scan first to generate new entries.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CONTACT ═══════════ -->
+<section id="contact" class="page">
+  <h1>Contact</h1>
+  <p class="contact-sub">Have a question, found a bug, or want to contribute? Reach out through any of the channels below.</p>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div class="cc-icon">📧</div>
+      <h3>Email Support</h3>
+      <p>For technical queries and bug reports.<br><a href="mailto:support@unms.local">support@unms.local</a></p>
+    </div>
+    <div class="contact-card">
+      <div class="cc-icon">🐙</div>
+      <h3>GitHub Repository</h3>
+      <p>View source code, open issues, or submit a pull request.<br><a href="#">github.com/unms</a></p>
+    </div>
+    <div class="contact-card">
+      <div class="cc-icon">🎓</div>
+      <h3>Academic Supervisor</h3>
+      <p>This project was developed as part of a B.Sc. Digital &amp; Cyber Forensic Science programme. Contact via your institution's portal.</p>
+    </div>
+    <div class="contact-card">
+      <div class="cc-icon">📖</div>
+      <h3>Documentation</h3>
+      <p>Full setup guide and API reference available in the <a href="#" onclick="showPage('help')">Help section</a> or the project README.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Unified Network Monitoring System</p>
+  <p>B.Sc. Digital &amp; Cyber Forensic Science Student</p>
+</footer>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
+

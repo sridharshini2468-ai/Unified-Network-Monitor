@@ -1,0 +1,1136 @@
+/* ============================================================
+   UNIFIED NETWORK MONITOR
+   Main Network + Device Details Styles
+   ============================================================ */
+
+
+/* ============================================================
+   GLOBAL
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #091020;
+    --bg2: #0d1628;
+
+    --purple: #2e024f;
+    --purple2: #47007d;
+    --accent: #71508a;
+
+    --light: whitesmoke;
+    --muted: rgba(245, 245, 245, 0.55);
+
+    --border: rgba(71, 0, 125, 0.45);
+    --border2: rgba(113, 80, 138, 0.35);
+}
+
+
+/* ============================================================
+   BODY
+   ============================================================ */
+
+body {
+    font-family: Arial, sans-serif;
+
+    background-color: var(--bg);
+    background-image: linear-gradient(
+        to right,
+        #000102,
+        #2e024f94
+    );
+
+    color: var(--light);
+
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 2.5rem;
+    height: 68px;
+
+    background: rgba(9, 16, 32, 0.9);
+
+    backdrop-filter: blur(16px);
+
+    border-bottom: 1px solid var(--border);
+
+    position: sticky;
+    top: 0;
+
+    z-index: 200;
+
+    box-shadow: 0 2px 28px rgba(46, 2, 79, 0.3);
+}
+
+
+.logo {
+    font-family: "Times New Roman", Times, serif;
+
+    font-size: 1.55rem;
+
+    color: var(--light);
+
+    letter-spacing: 0.14em;
+
+    text-shadow: 0 0 22px rgba(113, 80, 138, 0.6);
+
+    cursor: pointer;
+
+    user-select: none;
+}
+
+
+nav ul {
+    display: flex;
+
+    list-style: none;
+
+    gap: 0.15rem;
+
+    align-items: center;
+}
+
+
+nav a {
+    display: block;
+
+    padding: 0.42rem 0.95rem;
+
+    color: var(--accent);
+
+    text-decoration: none;
+
+    font-size: 0.86rem;
+
+    letter-spacing: 0.05em;
+
+    border: 1px solid transparent;
+
+    border-radius: 6px;
+
+    transition: all 0.25s;
+
+    cursor: pointer;
+}
+
+
+nav a:hover,
+nav a.active {
+    color: #e5e7eb;
+
+    background: rgba(71, 0, 125, 0.2);
+
+    border-color: var(--border);
+}
+
+
+/* ============================================================
+   PAGE SYSTEM
+   ============================================================ */
+
+.page {
+    display: none;
+
+    flex: 1;
+
+    flex-direction: column;
+}
+
+
+.page.active {
+    display: flex;
+}
+
+ 
+
+/* ============================================================
+   NETWORK PAGE
+   ============================================================ */
+
+#network {
+    padding: 2rem 2.5rem;
+}
+
+
+/* ============================================================
+   SUMMARY CARDS
+   ============================================================ */
+
+.summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(200px, 1fr));
+
+    gap: 1.2rem;
+
+    margin-bottom: 1.5rem;
+}
+
+
+.card,
+.card2,
+.card3 {
+    min-height: 130px;
+
+    border: 1px solid #47007dd1;
+
+    border-radius: 16px;
+
+    text-align: center;
+
+    color: white;
+
+    padding: 1.4rem 1rem;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 0.5rem;
+
+    position: relative;
+
+    overflow: hidden;
+
+    transition:
+        transform 0.25s,
+        box-shadow 0.25s,
+        border-color 0.25s;
+
+    cursor: default;
+}
+
+
+.card {
+    background:
+        linear-gradient(
+            135deg,
+            #000102c4,
+            #2e024f81
+        );
+}
+
+
+.card2 {
+    background:
+        linear-gradient(
+            135deg,
+            #000102b1,
+            #2e024f81
+        );
+}
+
+
+.card3 {
+    background:
+        linear-gradient(
+            135deg,
+            #000102c5,
+            #2e024f81
+        );
+}
+
+
+.card::before,
+.card2::before,
+.card3::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 2px;
+
+    background:
+        linear-gradient(
+            to right,
+            #47007d,
+            #71508a,
+            transparent
+        );
+}
+
+
+.card:hover,
+.card2:hover,
+.card3:hover {
+    transform: translateY(-4px);
+
+    border-color: rgba(113, 80, 138, 0.7);
+
+    box-shadow:
+        0 8px 36px rgba(71, 0, 125, 0.35);
+}
+
+
+.card p,
+.card2 p,
+.card3 p {
+    font-size: 0.78rem;
+
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+
+    color: rgba(255, 255, 255, 0.65);
+}
+
+
+.card span,
+.card2 span,
+.card3 span {
+    font-size: 2rem;
+
+    font-weight: bold;
+
+    color: #fff;
+
+    text-shadow:
+        0 0 18px rgba(113, 80, 138, 0.5);
+}
+
+
+/* ============================================================
+   ACTION BUTTONS
+   ============================================================ */
+
+.actions {
+    display: flex;
+
+    gap: 1rem;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 1.5rem;
+}
+
+
+.actions button {
+    padding: 0.7rem 1.6rem;
+
+    background: rgba(130, 6, 231, 0.38);
+
+    border: 1px solid rgba(71, 0, 125, 0.55);
+
+    border-radius: 9px;
+
+    color: #e5e7eb;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 0.9rem;
+
+    cursor: pointer;
+
+    letter-spacing: 0.04em;
+
+    transition: all 0.25s;
+}
+
+
+.actions button:hover {
+    background: rgb(34, 2, 62);
+
+    border-color: var(--accent);
+
+    box-shadow:
+        0 4px 20px rgba(71, 0, 125, 0.4);
+
+    transform: translateY(-2px);
+}
+
+
+.actions button:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+    transform: none !important;
+}
+
+
+/* ============================================================
+   DEVICE TABLE
+   ============================================================ */
+
+.devices {
+    background: rgba(9, 16, 32, 0.55);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    margin-bottom: 2rem;
+}
+
+
+.devices-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0.9rem 1.5rem;
+
+    border-bottom: 1px solid var(--border);
+
+    background: rgba(71, 0, 125, 0.07);
+}
+
+
+.devices-header h2 {
+    font-family: "Times New Roman", Times, serif;
+
+    font-size: 1.05rem;
+
+    letter-spacing: 0.08em;
+
+    color: var(--light);
+}
+
+
+.devices-header .row-count {
+    font-size: 0.75rem;
+
+    color: var(--accent);
+
+    background: rgba(71, 0, 125, 0.15);
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    padding: 0.2rem 0.6rem;
+}
+
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+
+thead th {
+    font-size: 0.72rem;
+
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+
+    color: var(--accent);
+
+    padding: 0.8rem 1.25rem;
+
+    text-align: left;
+
+    border-bottom: 1px solid var(--border);
+
+    background: rgba(71, 0, 125, 0.06);
+}
+
+
+tbody td {
+    padding: 0.8rem 1.25rem;
+
+    color: rgba(245, 245, 245, 0.82);
+
+    font-size: 0.9rem;
+
+    border-bottom:
+        1px solid rgba(71, 0, 125, 0.15);
+}
+
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+tbody tr:hover {
+    background: rgba(26, 2, 44, 0.8);
+}
+
+
+.devicetable-row {
+    cursor: pointer;
+}
+
+
+/* ============================================================
+   DEVICE DETAILS PAGE
+   ============================================================ */
+
+#device-details-page {
+    padding: 2rem 2.5rem;
+    overflow-y: auto;
+}
+
+
+#device-details-page .devices {
+    margin-bottom: 1.5rem;
+}
+
+
+/* ============================================================
+   DEVICE SUMMARY
+   ============================================================ */
+
+.dd-summary {
+    background: rgba(9, 16, 32, 0.55);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    padding: 1.5rem 1.75rem;
+
+    margin-bottom: 1.5rem;
+}
+
+
+.dd-summary-top {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.8rem;
+
+    margin-bottom: 1.3rem;
+
+    flex-wrap: wrap;
+}
+
+
+.dd-summary-top h2 {
+    font-family: "Times New Roman", Times, serif;
+
+    font-size: 1.3rem;
+
+    color: whitesmoke;
+
+    letter-spacing: 0.04em;
+}
+
+
+.dd-dot {
+    width: 10px;
+    height: 10px;
+
+    border-radius: 50%;
+
+    background: #666;
+
+    flex-shrink: 0;
+}
+
+
+.dd-dot.online {
+    background: #7fc87f;
+
+    box-shadow:
+        0 0 8px rgba(127, 200, 127, 0.7);
+}
+
+
+.dd-dot.offline {
+    background: #e08080;
+}
+
+
+/* ============================================================
+   RISK BADGES
+   ============================================================ */
+
+.risk-badge {
+    margin-left: auto;
+
+    padding: 0.25rem 0.8rem;
+
+    border-radius: 12px;
+
+    font-size: 0.72rem;
+
+    letter-spacing: 0.06em;
+
+    border:
+        1px solid rgba(113, 80, 138, 0.4);
+
+    color: #a88ec4;
+
+    background: rgba(71, 0, 125, 0.2);
+}
+
+
+.risk-badge.low {
+    background: rgba(50, 120, 50, 0.2);
+
+    border-color:
+        rgba(80, 180, 80, 0.35);
+
+    color: #7fc87f;
+}
+
+
+.risk-badge.medium {
+    background: rgba(180, 140, 30, 0.2);
+
+    border-color:
+        rgba(200, 160, 60, 0.4);
+
+    color: #e0c080;
+}
+
+
+.risk-badge.high {
+    background: rgba(120, 30, 30, 0.2);
+
+    border-color:
+        rgba(180, 60, 60, 0.35);
+
+    color: #e08080;
+}
+
+
+/* ============================================================
+   DEVICE SUMMARY GRID
+   ============================================================ */
+
+.dd-summary-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(160px, 1fr));
+
+    gap: 1.1rem;
+}
+
+
+.dd-summary-grid p {
+    font-size: 0.72rem;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    color: var(--accent);
+
+    margin-bottom: 0.3rem;
+}
+
+
+.dd-summary-grid span {
+    font-size: 0.95rem;
+
+    color: rgba(245, 245, 245, 0.9);
+}
+
+
+/* ============================================================
+   DEVICE STORY
+   ============================================================ */
+
+.dd-story-list {
+    list-style: none;
+
+    padding: 1.1rem 1.6rem;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.6rem;
+}
+
+
+.dd-story-list li {
+    position: relative;
+
+    padding-left: 1.2rem;
+
+    color: rgba(245, 245, 245, 0.85);
+
+    font-size: 0.9rem;
+
+    line-height: 1.6;
+}
+
+
+.dd-story-list li::before {
+    content: "—";
+
+    position: absolute;
+
+    left: 0;
+
+    color: var(--accent);
+}
+
+
+/* ============================================================
+   INVESTIGATION TIMELINE
+   ============================================================ */
+
+/*
+   IMPORTANT:
+   The timeline gets its own scrollbar.
+
+   This prevents the Device Details page from becoming
+   extremely long when many events are stored.
+*/
+
+.dd-timeline {
+    padding: 1.2rem 1.6rem;
+
+    max-height: 280px;
+
+    overflow-y: auto;
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        var(--accent)
+        rgba(71, 0, 125, 0.15);
+}
+
+
+/* Chrome / Edge scrollbar */
+
+.dd-timeline::-webkit-scrollbar {
+    width: 6px;
+}
+
+
+.dd-timeline::-webkit-scrollbar-track {
+    background: rgba(71, 0, 125, 0.12);
+
+    border-radius: 10px;
+}
+
+
+.dd-timeline::-webkit-scrollbar-thumb {
+    background: var(--accent);
+
+    border-radius: 10px;
+}
+
+
+.dd-timeline-item {
+    display: flex;
+
+    gap: 0.9rem;
+
+    padding: 0.6rem 0;
+
+    position: relative;
+}
+
+
+.dd-timeline-item:not(:last-child)::before {
+    content: "";
+
+    position: absolute;
+
+    left: 5px;
+
+    top: 26px;
+
+    bottom: -16px;
+
+    width: 1px;
+
+    background: var(--border);
+}
+
+
+.dd-timeline-dot {
+    width: 11px;
+    height: 11px;
+
+    border-radius: 50%;
+
+    background: rgba(71, 0, 125, 0.5);
+
+    border: 1px solid var(--accent);
+
+    flex-shrink: 0;
+
+    margin-top: 0.25rem;
+}
+
+
+.dd-timeline-time {
+    font-size: 0.72rem;
+
+    color: var(--accent);
+
+    letter-spacing: 0.04em;
+
+    margin-bottom: 0.15rem;
+}
+
+
+.dd-timeline-title {
+    font-size: 0.9rem;
+
+    color: whitesmoke;
+
+    font-weight: 600;
+
+    letter-spacing: 0.02em;
+}
+
+
+.dd-timeline-text {
+    font-size: 0.85rem;
+
+    color: rgba(245, 245, 245, 0.7);
+
+    margin-top: 0.15rem;
+}
+
+
+/* ============================================================
+   SECURITY
+   ============================================================ */
+
+.dd-security-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(160px, 1fr));
+
+    gap: 1.1rem;
+
+    padding: 1.1rem 1.6rem 0.6rem;
+}
+
+
+.dd-security-grid p {
+    font-size: 0.72rem;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    color: var(--accent);
+
+    margin-bottom: 0.3rem;
+}
+
+
+.dd-security-grid span {
+    font-size: 0.95rem;
+
+    color: rgba(245, 245, 245, 0.9);
+}
+
+
+.dd-security-note {
+    padding: 0 1.6rem 1.3rem;
+
+    font-size: 0.8rem;
+
+    color: var(--muted);
+
+    font-style: italic;
+}
+
+
+/* ============================================================
+   QUICK STATS
+   ============================================================ */
+
+.dd-quickstats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(140px, 1fr));
+
+    gap: 1rem;
+
+    margin-bottom: 1.5rem;
+}
+
+
+.dd-quickstat {
+    background:
+        linear-gradient(
+            135deg,
+            #000102c4,
+            #2e024f81
+        );
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    padding: 1rem;
+
+    text-align: center;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+.dd-quickstat::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 2px;
+
+    background:
+        linear-gradient(
+            to right,
+            #47007d,
+            #71508a,
+            transparent
+        );
+}
+
+
+.dd-quickstat p {
+    font-size: 0.7rem;
+
+    letter-spacing: 0.09em;
+
+    text-transform: uppercase;
+
+    color: rgba(255, 255, 255, 0.6);
+
+    margin-bottom: 0.4rem;
+}
+
+
+.dd-quickstat span {
+    font-size: 1.3rem;
+
+    font-weight: bold;
+
+    color: #fff;
+
+    text-shadow:
+        0 0 14px rgba(113, 80, 138, 0.5);
+}
+
+
+/* ============================================================
+   TRAFFIC
+   ============================================================ */
+
+.dd-traffic-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(160px, 1fr));
+
+    gap: 1.1rem;
+
+    padding: 1.1rem 1.6rem 0.8rem;
+}
+
+
+.dd-traffic-grid p {
+    font-size: 0.72rem;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+
+    color: var(--accent);
+
+    margin-bottom: 0.3rem;
+}
+
+
+.dd-traffic-grid span {
+    font-size: 0.95rem;
+
+    color: rgba(245, 245, 245, 0.9);
+}
+
+
+.dd-traffic-chart {
+    display: flex;
+
+    align-items: flex-end;
+
+    gap: 1.5rem;
+
+    padding: 0 1.6rem 1.4rem;
+
+    height: 90px;
+}
+
+
+.dd-chart-bar-wrap {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 0.4rem;
+
+    flex: 1;
+
+    height: 100%;
+
+    justify-content: flex-end;
+}
+
+
+.dd-chart-bar {
+    width: 36px;
+
+    border-radius: 5px 5px 0 0;
+
+    background:
+        linear-gradient(
+            to top,
+            #47007d,
+            #a184c4
+        );
+
+    transition: height 0.8s ease;
+}
+
+
+.dd-chart-label {
+    font-size: 0.72rem;
+
+    color: var(--muted);
+}
+
+
+/* ============================================================
+   STATE / EMPTY MESSAGES
+   ============================================================ */
+
+.dd-state-msg {
+    padding: 1.1rem 1.5rem;
+
+    color: var(--muted);
+
+    font-size: 0.88rem;
+}
+
+
+.empty-msg {
+    padding: 1.1rem 1.6rem;
+
+    color: var(--muted);
+
+    font-size: 0.88rem;
+
+    font-style: italic;
+}
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+footer {
+    background: #1B0F3B;
+
+    background-image:
+        linear-gradient(
+            to left,
+            #0d0817,
+            #34235d
+        );
+
+    text-align: center;
+
+    color: #f1f5f9;
+
+    padding: 1.4rem;
+
+    border-top: #111e3c 2px solid;
+
+    font-size: 0.84rem;
+
+    letter-spacing: 0.04em;
+}
+
+
+footer p {
+    margin: 0.2rem 0;
+
+    color: rgba(241, 245, 249, 0.65);
+}
+
+
+footer p:first-child {
+    color: #f1f5f9;
+
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+    nav {
+        padding: 0 1.2rem;
+    }
+
+    nav ul {
+        gap: 0;
+    }
+
+    nav a {
+        padding: 0.4rem 0.55rem;
+
+        font-size: 0.78rem;
+    }
+
+    #network,
+    #device-details-page {
+        padding: 1.5rem 1.2rem;
+    }
+
+    .summary {
+        gap: 0.85rem;
+    }
+
+}
